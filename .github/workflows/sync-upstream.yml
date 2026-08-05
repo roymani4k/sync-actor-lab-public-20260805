@@ -1,0 +1,22 @@
+name: Sync from upstream with GITHUB_TOKEN
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Merge upstream
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPOSITORY: ${{ github.repository }}
+          BRANCH: ${{ github.ref_name }}
+        run: |
+          gh api \
+            --method POST \
+            "repos/$REPOSITORY/merge-upstream" \
+            -f "branch=$BRANCH"
