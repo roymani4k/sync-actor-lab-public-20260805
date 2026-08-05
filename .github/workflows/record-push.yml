@@ -1,0 +1,41 @@
+name: Record push identity
+
+on:
+  push:
+
+permissions:
+  contents: read
+
+jobs:
+  record:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Record event identities
+        env:
+          ACTOR: ${{ github.actor }}
+          ACTOR_ID: ${{ github.actor_id }}
+          TRIGGERING_ACTOR: ${{ github.triggering_actor }}
+          EVENT_SENDER: ${{ github.event.sender.login }}
+          PUSHER_NAME: ${{ github.event.pusher.name }}
+          HEAD_AUTHOR_NAME: ${{ github.event.head_commit.author.name }}
+          HEAD_AUTHOR_USERNAME: ${{ github.event.head_commit.author.username }}
+          HEAD_COMMITTER_NAME: ${{ github.event.head_commit.committer.name }}
+          HEAD_COMMITTER_USERNAME: ${{ github.event.head_commit.committer.username }}
+          HEAD_MESSAGE: ${{ github.event.head_commit.message }}
+          BEFORE_SHA: ${{ github.event.before }}
+          AFTER_SHA: ${{ github.event.after }}
+        run: |
+          {
+            echo "github.actor=$ACTOR"
+            echo "github.actor_id=$ACTOR_ID"
+            echo "github.triggering_actor=$TRIGGERING_ACTOR"
+            echo "github.event.sender.login=$EVENT_SENDER"
+            echo "github.event.pusher.name=$PUSHER_NAME"
+            echo "github.event.head_commit.author.name=$HEAD_AUTHOR_NAME"
+            echo "github.event.head_commit.author.username=$HEAD_AUTHOR_USERNAME"
+            echo "github.event.head_commit.committer.name=$HEAD_COMMITTER_NAME"
+            echo "github.event.head_commit.committer.username=$HEAD_COMMITTER_USERNAME"
+            echo "github.event.head_commit.message=$HEAD_MESSAGE"
+            echo "github.event.before=$BEFORE_SHA"
+            echo "github.event.after=$AFTER_SHA"
+          } | tee "$GITHUB_STEP_SUMMARY"
